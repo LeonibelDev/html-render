@@ -6,7 +6,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -18,25 +20,22 @@ func main() {
 	})
 
 	http.HandleFunc("/validatecc", func(w http.ResponseWriter, r *http.Request) {
+
 		type CreditCard struct {
 			Number string
 		}
 
-		var cc CreditCard
+		var NewCreditCard CreditCard
 
-		err := json.NewDecoder(r.Body).Decode(&cc)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+		cc := json.NewDecoder(r.Body).Decode(&NewCreditCard)
+		if cc != nil {
+			log.Fatal(cc)
 		}
 
-		// validate cc
-		isValid := validateCC(cc.Number)
+		// validate credit card
+		Validate := validateCC(NewCreditCard.Number)
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]bool{
-			"valid": isValid,
-		})
+		fmt.Fprintf(w, "{ \"valid\": %t }", Validate)
 	})
 
 	http.ListenAndServe(":8080", nil)
