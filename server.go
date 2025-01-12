@@ -10,6 +10,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -38,5 +39,10 @@ func main() {
 		fmt.Fprintf(w, "{ \"valid\": %t }", Validate)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 }
