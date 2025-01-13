@@ -33,6 +33,10 @@ func main() {
 			log.Fatal(cc)
 		}
 
+		if NewCreditCard.Number == "" {
+			fmt.Fprintf(w, "{ \"message\": \"Please provide a credit card number\" }")
+		}
+
 		// validate credit card
 		Validate := validateCC(NewCreditCard.Number)
 
